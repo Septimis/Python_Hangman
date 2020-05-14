@@ -68,18 +68,70 @@ if __name__ == "__main__":
         else:
             print("\n...Returning to main menu...\n")
     
-    #Now pick a random phrase from the choices
+    #Start of the game
     while(True):
-        currentPhrase = random.choice(phrases).lower()
-        hiddenPhrase = ""
+        currentPhrase = random.choice(phrases).lower().rstrip()
+        numGuesses = 0
+        numIncorrect = 0
+        lettersInPhrase = 0
+        victoryCondition = 0
+        incorrectGuesses = []
+        correctGuesses = []
+
+        #Functionality to convert my chosen phrase to be hidden
+        hiddenPhrase = []
         for i in currentPhrase:
             if(ord(i) != 32):
-                hiddenPhrase = hiddenPhrase + "*"
+                hiddenPhrase.append("*")
+                lettersInPhrase = lettersInPhrase + 1
             else:
-                hiddenPhrase = hiddenPhrase + " "
+                hiddenPhrase.append(" ")
 
         print("\n** STARTING GAME **")
         print("-------------------\n")
+
+        while(numIncorrect < 3):
+            print("Number of Guesses: ", numGuesses)
+            print("Number of Incorrect Guesses: ", numIncorrect, "/3")
+            print("Previous Wrong Guesses: ", incorrectGuesses)
+            print("Previous Correct Guesses: ", correctGuesses, "\n")
+            for items in hiddenPhrase:
+                print(items, end=" ")
+            newGuess = input("\nPlease enter your best guess: ")
+
+            #Logic to determine if a letter is correct & win conditions
+            increment = 0
+            numCorrect = 0
+            for letter in currentPhrase:
+                if(newGuess == currentPhrase[increment]):
+                    hiddenPhrase[increment] = newGuess
+                    alreadyExists = False
+                    victoryCondition = victoryCondition + 1
+                    for i in correctGuesses:
+                        if(i == newGuess):
+                            alreadyExists = True
+                    if(alreadyExists == False): #It will only add the letter once
+                        correctGuesses.append(currentPhrase[increment])
+                        numCorrect = numCorrect + 1
+                        
+                    
+                increment = increment + 1
+            if(numCorrect == 0):
+                incorrectGuesses.append(newGuess)
+                numIncorrect = numIncorrect + 1
+            numGuesses = numGuesses + 1
+            if(victoryCondition == lettersInPhrase):
+                print("\n", currentPhrase.upper())
+                print("You Win!\n")
+                break
+
+
+        if(numIncorrect == 3):
+            print("\nThe phrase: ", currentPhrase.upper())
+            print("Number of Incorrect Guesses: ", numIncorrect, "/3")
+            print("You lose!\n")
+
+        #Functionality to play again as well as vet responses
         playAgain = input("Play again? (y / n): ")
         if(len(playAgain) == 1):
             if(testInputAsLetter(playAgain)):
