@@ -1,6 +1,19 @@
 import os.path
 import random
 
+def errorMsg(l_errorMsg):
+    print("\n##################################################################")
+    print("                           ERROR REPORT\n")
+    print(l_errorMsg)
+    print("\n##################################################################\n")
+
+def testInputAsLetter(l_letter):
+    if((ord(l_letter) >= 65 and ord(l_letter) <= 90) or (ord(l_letter) >= 97 and ord(l_letter) <= 122)):
+        return True
+    else:
+        return False
+
+
 def readFile(l_fileName):
     if os.path.isfile(l_fileName):
         try:
@@ -56,5 +69,26 @@ if __name__ == "__main__":
             print("\n...Returning to main menu...\n")
     
     #Now pick a random phrase from the choices
-    currentPhrase = random.choice(phrases)
-    print(currentPhrase)
+    while(True):
+        currentPhrase = random.choice(phrases).lower()
+        hiddenPhrase = ""
+        for i in currentPhrase:
+            if(ord(i) != 32):
+                hiddenPhrase = hiddenPhrase + "*"
+            else:
+                hiddenPhrase = hiddenPhrase + " "
+
+        print("\n** STARTING GAME **")
+        print("-------------------\n")
+        playAgain = input("Play again? (y / n): ")
+        if(len(playAgain) == 1):
+            if(testInputAsLetter(playAgain)):
+                if(playAgain.lower() == 'n'):
+                    break
+                elif(playAgain.lower() != 'n' and playAgain.lower() != 'y'):
+                    errorMsg("Your input was a character other than 'y' or 'n'.  Please use 'y' or 'n'...")
+            else:
+                errorMsg("Your input wasn't a letter.  Please type 'y' or 'n'...")
+        else:
+            errorMsg("Your input was longer than one character.  Please type a 'y' or 'n'...")
+    
