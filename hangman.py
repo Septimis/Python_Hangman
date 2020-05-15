@@ -69,7 +69,8 @@ if __name__ == "__main__":
             print("\n...Returning to main menu...\n")
     
     #Start of the game
-    while(True):
+    showMustGoOn = True
+    while(showMustGoOn):
         currentPhrase = random.choice(phrases).lower().rstrip()
         numGuesses = 0
         numIncorrect = 0
@@ -102,20 +103,24 @@ if __name__ == "__main__":
             #Logic to determine if a letter is correct & win conditions
             increment = 0
             numCorrect = 0
-            for letter in currentPhrase:
-                if(newGuess == currentPhrase[increment]):
-                    hiddenPhrase[increment] = newGuess
-                    alreadyExists = False
-                    victoryCondition = victoryCondition + 1
-                    for i in correctGuesses:
-                        if(i == newGuess):
-                            alreadyExists = True
-                    if(alreadyExists == False): #It will only add the letter once
-                        correctGuesses.append(currentPhrase[increment])
-                        numCorrect = numCorrect + 1
+            
+            if(newGuess in correctGuesses): #Tests if the guess has already been guessed
+                print("\nYou have already guessed that!\n")
+            else:
+                for letter in currentPhrase:
+                    if(newGuess == currentPhrase[increment]): #Tests if the guessed letter is contained in the phrase
+                        hiddenPhrase[increment] = newGuess #Changed the hidden phrase element to be equal to the guess
+                        alreadyExists = False
+                        victoryCondition = victoryCondition + 1
+                        for i in correctGuesses:
+                            if(i == newGuess):
+                                alreadyExists = True
+                        if(alreadyExists == False): #It will only add the letter once
+                            correctGuesses.append(currentPhrase[increment])
+                            numCorrect = numCorrect + 1
+                            
                         
-                    
-                increment = increment + 1
+                    increment = increment + 1
             if(numCorrect == 0):
                 incorrectGuesses.append(newGuess)
                 numIncorrect = numIncorrect + 1
@@ -132,15 +137,21 @@ if __name__ == "__main__":
             print("You lose!\n")
 
         #Functionality to play again as well as vet responses
-        playAgain = input("Play again? (y / n): ")
-        if(len(playAgain) == 1):
-            if(testInputAsLetter(playAgain)):
-                if(playAgain.lower() == 'n'):
-                    break
-                elif(playAgain.lower() != 'n' and playAgain.lower() != 'y'):
-                    errorMsg("Your input was a character other than 'y' or 'n'.  Please use 'y' or 'n'...")
+        improperInput = True
+        while(improperInput):
+            playAgain = input("Play again? (y / n): ")
+            if(len(playAgain) == 1):
+                if(testInputAsLetter(playAgain)):
+                    if(playAgain.lower() == 'n'):
+                        improperInput = False
+                        showMustGoOn = False
+                        break
+                    elif(playAgain.lower() == 'y'):
+                        improperInput = False
+                    elif(playAgain.lower() != 'n' and playAgain.lower() != 'y'):
+                        errorMsg("Your input was a character other than 'y' or 'n'.  Please use 'y' or 'n'...")
+                else:
+                    errorMsg("Your input wasn't a letter.  Please type 'y' or 'n'...")
             else:
-                errorMsg("Your input wasn't a letter.  Please type 'y' or 'n'...")
-        else:
-            errorMsg("Your input was longer than one character.  Please type a 'y' or 'n'...")
+                errorMsg("Your input was longer than one character.  Please type a 'y' or 'n'...")
     
