@@ -16,23 +16,27 @@ def testInputAsLetter(l_letter):
 def readFile(l_fileName):
     if os.path.isfile(l_fileName):
         try:
-            with open(l_fileName, "r", encoding="utf-16") as idiomFile:
-                #An array of strings containing the contents of 'idioms.txt'
-                return idiomFile.readlines()   
+            if(l_fileName == "idioms.txt"):
+                with open(l_fileName, "r", encoding="utf-16") as idiomFile:
+                    #An array of strings containing the contents of 'idioms.txt'
+                    return idiomFile.readlines()   
+            else:
+                with(open(l_fileName, "r")) as idiomFile:
+                    return idiomFile.readlines()
         except FileNotFoundError:
-            print("There was an error in reading the file")
+            errorMsg("There was an error in reading the file")
     else:
         return []
 
 if __name__ == "__main__":
-    #Local Variables
-    phrases = []
-    returnToMainMenu = True
     repeatGame = True
-
     #Introduction to the game
     print("This hangman game will increase your use of idioms.  Enjoy\n*Made by Connor Meads*\n")
     while(repeatGame):
+        #Local Variables
+        phrases = []
+        returnToMainMenu = True
+
         while(returnToMainMenu):
             choiceInput = input("1 - Use my list of idioms\n2 - Type in your own custom phrase\n3 - Type in the name of the .txt file for your own custom phrases\n: ")
 
