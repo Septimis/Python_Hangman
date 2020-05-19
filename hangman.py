@@ -13,7 +13,6 @@ def testInputAsLetter(l_letter):
     else:
         return False
 
-
 def readFile(l_fileName):
     if os.path.isfile(l_fileName):
         try:
@@ -91,22 +90,47 @@ if __name__ == "__main__":
         print("\n** STARTING GAME **")
         print("-------------------\n")
 
-        while(numIncorrect < 3):
+        while(numIncorrect < 6):
+            #Variables to determine if a letter is correct & win conditions
+            increment = 0
+            numCorrect = 0
+
+            #Stats printed after every round
             print("Number of Guesses: ", numGuesses)
-            print("Number of Incorrect Guesses: ", numIncorrect, "/3")
+            print("Number of Correct Guesses: ", numCorrect)
+            print("Number of Incorrect Guesses: ", numIncorrect, "/6")
             print("Previous Wrong Guesses: ", incorrectGuesses)
             print("Previous Correct Guesses: ", correctGuesses, "\n")
             for items in hiddenPhrase:
                 print(items, end=" ")
             newGuess = input("\nPlease enter your best guess: ")
 
-            #Logic to determine if a letter is correct & win conditions
-            increment = 0
-            numCorrect = 0
+            
             
             if(newGuess in correctGuesses): #Tests if the guess has already been guessed
                 print("\nYou have already guessed that!\n")
-            else:
+            elif(len(newGuess) > 1):
+                if(newGuess in currentPhrase):
+                    i = 0
+                    for letter in currentPhrase:
+                        if(currentPhrase[i]==newGuess[0]):
+                            j = 0
+                            tempStr = ""
+                            for character in newGuess:
+                                if((i + j) >= len(currentPhrase)):
+                                    break
+                                elif(currentPhrase[i + j] == newGuess[j]):
+                                    tempStr = tempStr + character
+                                j = j + 1
+                            if(tempStr == newGuess):
+                                k = 0
+                                for character in newGuess:
+                                    hiddenPhrase[i + k] = character
+                                    numCorrect = numCorrect + 1
+                                    k = k + 1
+                        i = i + 1
+
+            elif(len(newGuess) == 1):
                 for letter in currentPhrase:
                     if(newGuess == currentPhrase[increment]): #Tests if the guessed letter is contained in the phrase
                         hiddenPhrase[increment] = newGuess #Changed the hidden phrase element to be equal to the guess
@@ -131,9 +155,9 @@ if __name__ == "__main__":
                 break
 
 
-        if(numIncorrect == 3):
+        if(numIncorrect == 6):
             print("\nThe phrase: ", currentPhrase.upper())
-            print("Number of Incorrect Guesses: ", numIncorrect, "/3")
+            print("Number of Incorrect Guesses: ", numIncorrect, "/6")
             print("You lose!\n")
 
         #Functionality to play again as well as vet responses
