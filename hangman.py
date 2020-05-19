@@ -105,7 +105,7 @@ if __name__ == "__main__":
                 print("Previous Correct Guesses: ", correctGuesses, "\n")
                 for items in hiddenPhrase:
                     print(items, end=" ")
-                newGuess = input("\nPlease enter your best guess: ")
+                newGuess = input("\n\nPlease enter your best guess: ").lower()
 
                 #Variables to determine if a letter is correct & win conditions
                 increment = 0
